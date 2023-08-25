@@ -1,19 +1,43 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
-import { useTheme } from "@mui/material";
+import axios from "axios";
+import { useState, useEffect } from "react";
+
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Axios ile veriyi çekme işlemi
+    axios.get("http://localhost:8080/users")
+      .then(response => {
+        setData(response.data);
+        setIsLoading(false); // Veri çekildiğinde yüklenme durumunu güncelliyoruz
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+        setError(error); // Hata durumunu güncelliyoruz
+        setIsLoading(false); // Hata durumunda da yüklenme durumunu güncelliyoruz
+      });
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (error) {
+    return <div>An error occurred: {error.message}</div>;
+  }
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
     {
-      field: "name",
+      field: "userName",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
@@ -46,11 +70,13 @@ const Contacts = () => {
       flex: 1,
     },
     {
-      field: "zipCode",
+      field: "zipcode",
       headerName: "Zip Code",
       flex: 1,
     },
   ];
+
+
 
   return (
     <Box m="20px">
@@ -91,7 +117,7 @@ const Contacts = () => {
         }}
       >
         <DataGrid
-          rows={mockDataContacts}
+          rows={data}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />

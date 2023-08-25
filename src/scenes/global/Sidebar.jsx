@@ -5,17 +5,30 @@ import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import GroupIcon from '@mui/icons-material/Group';
+import TopicIcon from '@mui/icons-material/Topic';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import PublicIcon from '@mui/icons-material/Public';
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import LayersIcon from '@mui/icons-material/Layers';
+import GavelIcon from '@mui/icons-material/Gavel';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -59,19 +72,37 @@ const Sidebar = () => {
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
         },
+        "& ::-webkit-scrollbar-thumb": {
+          backgroundColor: "#6870fa",
+          borderRadius: "4px",
+
+        },
+        "& ::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+        "& ::-webkit-scrollbar": {
+          width: "5px",
+          height: "5px"
+        }
       }}
     >
+
       <ProSidebar collapsed={isCollapsed}>
-        <Menu iconShape="square">
+        <Menu
+          iconShape="square"
+        >
+
           {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: "10px 0 20px 0",
+              margin: "10px 0 10px 0",
               color: colors.grey[100],
             }}
           >
+            
+
             {!isCollapsed && (
               <Box
                 display="flex"
@@ -79,8 +110,8 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  ADMIN
+                <Typography variant="h2" color={colors.grey[100]}>
+                  <GraphicEqIcon />
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -90,22 +121,13 @@ const Sidebar = () => {
           </MenuItem>
 
           {!isCollapsed && (
-            <Box mb="25px">
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={`../../assets/user.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                />
-              </Box>
+            <Box mb="5px">
               <Box textAlign="center">
                 <Typography
                   variant="h2"
                   color={colors.grey[100]}
                   fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
+                  sx={{ m: "15px 0 0 0" }}
                 >
                   Elvin Sadikh
                 </Typography>
@@ -116,7 +138,7 @@ const Sidebar = () => {
             </Box>
           )}
 
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "2%"}>
             <Item
               title="Dashboard"
               to="/"
@@ -128,24 +150,33 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ m: "15px 0 5px 10px" }}
             >
-              Data
+              Reports
             </Typography>
             <Item
-              title="Manage Team"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
+              title="Requests"
+              to="/call-requests"
+              icon={<AssignmentIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Contacts Information"
-              to="/contacts"
-              icon={<ContactsOutlinedIcon />}
+              title="Summary"
+              to="/summary"
+              icon={<AssignmentTurnedInIcon />}
               selected={selected}
               setSelected={setSelected}
             />
+
+            <Item
+              title="By Gateway"
+              to="/call-requests/by-gateway"
+              icon={<MeetingRoomIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
             <Item
               title="Invoices Balances"
               to="/invoices"
@@ -153,11 +184,113 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 10px" }}
+            >
+              Users
+            </Typography>
+            <Item
+              title="Customers"
+              to="/contacts"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+              title="Users"
+              to="/users"
+              icon={<GroupIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ m: "15px 0 5px 10px" }}
+            >
+              Settings
+            </Typography>
+            <Item
+              title="Tariffs"
+              to="/tariffs"
+              icon={<TopicIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Destinations"
+              to="/destinations"
+              icon={<TelegramIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Sender Name"
+              to="/sender-name"
+              icon={<EditNoteIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+              title="Prompts"
+              to="/prompts"
+              icon={<VolumeUpIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+            title="Languages"
+            to="/prompt-lang"
+            icon={<PublicIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            />
+            <Item
+            title="Sip Profiles"
+            to="/sip-profiles"
+            icon={<AccountTreeIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            />
+            <Item
+            title="Gateways"
+            to="/gateways"
+            icon={<MeetingRoomIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            />
+            <Item
+            title="Gateway Groups"
+            to="/gateway-groups"
+            icon={<LayersIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            />
+            <Item
+            title="Number rewriting"
+            to="/number-rewrite-rules"
+            icon={<GavelIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            />
+            <Item
+            title="Send Api Request"
+            to="/api-request/request"
+            icon={<ChecklistIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            />
+
+
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 10px" }}
             >
               Pages
             </Typography>
@@ -186,7 +319,7 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ m: "15px 0 5px 10px" }}
             >
               Charts
             </Typography>
@@ -220,8 +353,10 @@ const Sidebar = () => {
             />
           </Box>
         </Menu>
+
       </ProSidebar>
-    </Box>
+
+    </Box >
   );
 };
 
