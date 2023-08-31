@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "./scenes/dashboard";
 import Topbar from "./scenes/global/TopBar";
 import Team from "./scenes/team";
-import Contact from "./scenes/contacts";
+import Customers from "./scenes/customers";
 import Invoices from "./scenes/invoices";
 import Sidebar from "./scenes/global/Sidebar";
 import Form from "./scenes/form";
@@ -33,7 +33,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/call-requests" element={<Team />} />
-                <Route path="/contacts" element={<Contact />} />
+                <Route path="/customers" element={<Customers />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/form" element={<Form />} />
                 <Route path="/calendar" element={<Calendar />} />

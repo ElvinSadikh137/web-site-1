@@ -193,7 +193,7 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Customers"
-              to="/contacts"
+              to="/customers"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
