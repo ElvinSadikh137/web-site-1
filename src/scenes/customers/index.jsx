@@ -1,4 +1,4 @@
-import { Box, Dialog, useTheme, DialogTitle, DialogContent, TextField, Button } from "@mui/material";
+import { Box, Dialog, useTheme, DialogTitle, DialogContent, TextField, Button, FormControlLabel, Radio } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -8,63 +8,85 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
-import CloseIcon from '@mui/icons-material/Close';
-import * as yup from "yup";
-import { Formik } from "formik";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { ScaleLoader } from "react-spinners";
+import ServerError from "../../components/ServerError";
+import Information from "../../components/Customer/Information";
+import Update from "../../components/Customer/Update";
+import Save from "../../components/Customer/Save";
 
 const Customers = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const theme1 = useTheme();
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
-  };
+  const colors = tokens(theme1.palette.mode);
+
+  const [customerInfo, setCustomerInfo] = useState(null);
+
+  const [customerUpdate, setCustomerUpdate] = useState(null);
+
+  const [isCustomerInfoOpen, setIsCustomerInfoOpen] = useState(false);
+
+  const [isCustomerUpdateOpen, setIsCustomerUpdateOpen] = useState(false);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const handleAddModalOpen = () => {
-    setIsAddModalOpen(true);
-  };
-  const handleAddModalClose = () => {
-    setIsAddModalOpen(false);
-  };
-
-
   const [data, setData] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
+  
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    axios.get("http://localhost:8080/customers/customersInfo")
-      .then(response => {
+  const fetchData = () => {
+    axios
+      .get("http://localhost:8080/customers/customersInfo")
+      .then((response) => {
         setData(response.data);
         setIsLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching data:", error);
         setError(error);
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><ScaleLoader color="#36d7b7" /></Box>;
 
   if (error) {
-    return <div>An error occurred: {error.message}</div>;
+    return <div><ServerError /></div>;
   }
 
-  const viewCustomer = (customer) => {
-    // Görüntüleme işlemleri için yapılacaklar
+  const viewCustomer = async (customer) => {
+    const id = customer.id;
+    try {
+      const response = await axios.post('http://localhost:8080/customers/customersInfoById', { id });
+      setCustomerInfo(response.data);
+      setIsCustomerInfoOpen(true);
+    } catch (error) {
+      console.error("Müşteri bilgilerini alma hatası:", error);
+    }
   };
 
   const updateCustomer = (customer) => {
-    // Güncelleme işlemleri için yapılacaklar
+    setCustomerUpdate(customer);
+    setIsCustomerUpdateOpen(true);
+    fetchData();
   };
 
-  const deleteCustomer = (customer) => {
-    // Silme işlemleri için yapılacaklar
+  const deleteCustomer = async (customer) => {
+    const id = customer.id;
+    try {
+      await axios.post('http://localhost:8080/customers/deleteCustomer', { id });
+      fetchData();
+    } catch (error) {
+    }
+  };
+
+  const addCustomer = () => {
+    setIsAddModalOpen(true);
   };
 
 
@@ -96,11 +118,6 @@ const Customers = () => {
       flex: 1,
     },
     {
-      field: "reseller",
-      headerName: "Reseller",
-      flex: 1,
-    },
-    {
       field: "activeStatus",
       headerName: "Active",
       flex: 1,
@@ -111,14 +128,14 @@ const Customers = () => {
       flex: 0.5,
     },
     {
-      field: "actions", // Düğme sütununun adı
-      headerName: "Actions", // Sütun başlığı
+      field: "actions",
+      headerName: "Actions",
       flex: 1,
       renderCell: (params) => (
         <div>
           <Button sx={{
-            backgroundColor: colors.blueAccent[700],
-            color: colors.grey[100],
+            backgroundColor: "#83df77",
+            color: colors.white[100],
             fontSize: "14px",
             fontWeight: "bold",
             padding: "5px",
@@ -126,16 +143,16 @@ const Customers = () => {
           }} onClick={() => viewCustomer(params.row)}><PageviewIcon style={{ fontSize: "24px" }} /></Button>
 
           <Button sx={{
-            backgroundColor: colors.blueAccent[700],
-            color: colors.grey[100],
+            backgroundColor: "#83df77",
+            color: colors.white[100],
             fontSize: "14px",
             fontWeight: "bold",
             padding: "5px",
             borderRadius: "24px"
           }} onClick={() => updateCustomer(params.row)}><DriveFileRenameOutlineIcon style={{ fontSize: "24px" }} /></Button>
           <Button sx={{
-            backgroundColor: colors.blueAccent[700],
-            color: colors.grey[100],
+            backgroundColor: "#83df77",
+            color: colors.white[100],
             fontSize: "14px",
             fontWeight: "bold",
             padding: "5px",
@@ -147,152 +164,27 @@ const Customers = () => {
     }
   ];
 
-
-
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="Customers" subtitle="Monitoring Customres" />
         <Button
           sx={{
-            backgroundColor: colors.blueAccent[700],
-            color: colors.grey[100],
+            backgroundColor: "#83df77",
+            color: colors.white[100],
             fontSize: "14px",
             fontWeight: "bold",
-            padding: "10px 20px"
+            padding: "10px 20px",
           }}
-          onClick={handleAddModalOpen}
+          onClick={() => { addCustomer() }}
         >
           <AddBusinessIcon sx={{ mr: "10px", }} />
           Add Customer
         </Button>
-{/*  */}
-<Dialog open={isAddModalOpen} >
-          <DialogTitle sx={{ backgroundColor: colors.blueAccent[700] }}>Add New Customer <CloseIcon sx={{ marginLeft: "390px" }} onClick={handleAddModalClose} /></DialogTitle>
-          <DialogContent sx={{ backgroundColor: colors.grey[600] }}>
-            <Formik
-              onSubmit={handleFormSubmit}
-              initialValues={initialValues}
-              validationSchema={checkoutSchema}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isSubmitting,
-                dirty,
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  <Box
-                    display="grid"
-                    gap="20px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                    sx={{
-                      "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-                    }}
-                  >
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Name"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.name}
-                      name="name"
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      sx={{ gridColumn: "span 2" }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Type"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.type}
-                      name="type"
-                      error={!!touched.type && !!errors.type}
-                      helperText={touched.type && errors.type}
-                      sx={{ gridColumn: "span 2" }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Phone Number"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.phoneNumber}
-                      name="phoneNumber"
-                      error={!!touched.phoneNumber && !!errors.phoneNumber}
-                      helperText={touched.phoneNumber && errors.phoneNumber}
-                      sx={{ gridColumn: "span 2" }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Contact Persone"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.contactPerson}
-                      name="contactPerson"
-                      error={!!touched.contactPerson && !!errors.contactPerson}
-                      helperText={touched.contactPerson && errors.contactPerson}
-                      sx={{ gridColumn: "span 2" }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="number"
-                      label="Balance"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.balance}
-                      name="balance"
-                      error={!!touched.balance && !!errors.balance}
-                      helperText={touched.balance && errors.balance}
-                      sx={{
-                        "& input[type=number]::-webkit-inner-spin-button, & input[type=number]::-webkit-outer-spin-button": {
-                          display: "none",
-                        },
-                        gridColumn: "span 2",
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Active"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.activeStatus}
-                      name="activeStatus"
-                      error={!!touched.activeStatus && !!errors.activeStatus}
-                      helperText={touched.activeStatus && errors.activeStatus}
-                      sx={{
-                        gridColumn: "span 2",
-                      }}
-                    />
-                  </Box>
-                  <Box display="flex" justifyContent="center" mt="20px">
-                    <Button type="submit" color="createButone" variant="contained" disabled={isSubmitting || !dirty}>
-                      Create New Customer
-                    </Button>
-                  </Box>
-                </form>
-              )}
-            </Formik>
-          </DialogContent>
-        </Dialog>
-
+        <Save isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
       </Box>
-
+      <Information data={customerInfo} isOpen={isCustomerInfoOpen} onClose={() => setIsCustomerInfoOpen(false)} />
+      <Update data={customerUpdate} isOpen={isCustomerUpdateOpen} onClose={() => setIsCustomerUpdateOpen(false)} />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -303,11 +195,8 @@ const Customers = () => {
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
           },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
-          },
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: "#83df77",
             borderBottom: "none",
           },
           "& .MuiDataGrid-virtualScroller": {
@@ -315,7 +204,7 @@ const Customers = () => {
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: "#83df77",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
@@ -328,33 +217,8 @@ const Customers = () => {
       >
         <DataGrid rows={data} columns={columns} components={{ Toolbar: GridToolbar }} />
       </Box>
-    </Box>
+    </Box >
   );
-};
-
-const phoneRegExp =
-  /^(?:994)(50|51|55|60|70|77|99|10)(\d{7})$/;
-
-const checkoutSchema = yup.object().shape({
-  name: yup.string().required("Name cannot be null"),
-  type: yup.string().required("Type cannot be null"),
-  phoneNumber: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("Phone number cannot be null"),
-  contactPerson: yup.string().required("Contact Person cannot be null"),
-  reseller: yup.string().required("required"),
-  activeStatus: yup.string().required("Important!").oneOf("active","deactive"),
-  balance: yup.string().required("Balance cannot be null"),
-});
-const initialValues = {
-  name: "",
-  type: "",
-  phoneNumber: "",
-  contactPerson: "",
-  reseller: "",
-  activeStatus: "",
-  balance: "",
 };
 
 export default Customers;

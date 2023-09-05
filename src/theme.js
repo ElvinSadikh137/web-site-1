@@ -69,6 +69,17 @@ export const tokens = (mode) => ({
                 800: "#2a2d64",
                 900: "#151632"
             },
+            black: {
+                100: "#DBDBDB",
+                200: "#808080",
+                300: "#6D6D6D",
+                400: "#5B5B5B",
+                500: "#494949",
+                600: "#373737",
+                700: "#242424",
+                800: "#121212"
+
+            },
         }
         : {
             white: {
@@ -79,6 +90,16 @@ export const tokens = (mode) => ({
                 500: "#FEFEFA",
                 600: "#F8F8FF",
                 700: "#FFFFFF"
+            },
+            black: {
+                100: "#121212",
+                200: "#242424",
+                300: "#373737",
+                400: "#494949",
+                500: "#5B5B5B",
+                600: "#6D6D6D",
+                700: "#808080",
+                800: "#DBDBDB"
             },
             grey: {
                 100: "#141414",
@@ -103,15 +124,15 @@ export const tokens = (mode) => ({
                 900: "#d0d1d5"
             },
             greenAccent: {
-                100: "#0f2922",
-                200: "#1e5245",
-                300: "#2e7c67",
-                400: "#3da58a",
-                500: "#4cceac",
-                600: "#70d8bd",
-                700: "#94e2cd",
-                800: "#b7ebde",
-                900: "#dbf5ee"
+                100: "#83df77",
+                200: "#83d378",
+                300: "#82cc79",
+                400: "#82c47a",
+                500: "#82dd7a",
+                600: "#82b67b",
+                700: "#81ae7c",
+                800: "#81a07d",
+                900: "#81967e"
             },
             redAccent: {
                 100: "#2c100f",
@@ -131,9 +152,10 @@ export const tokens = (mode) => ({
                 400: "#535ac8",
                 500: "#6870fa",
                 600: "#868dfb",
-                700: "#a4a9fc",
+                700: "#91c8e4",
                 800: "#c3c6fd",
-                900: "#e1e2fe"
+                900: "#e1e2fe",
+                1000: "#749bc2"
             },
         }),
 });
@@ -153,8 +175,8 @@ export const themeSettings = (mode) => {
                     secondary: {
                         main: colors.greenAccent[500],
                     },
-                    createButone:{
-                        main: colors.blueAccent[400],
+                    createButone: {
+                        main: colors.greenAccent[700],
                     },
                     neutral: {
                         dark: colors.grey[700],
@@ -172,8 +194,8 @@ export const themeSettings = (mode) => {
                     secondary: {
                         main: colors.greenAccent[500],
                     },
-                    createButone:{
-                        main: colors.blueAccent[400],
+                    createButone: {
+                        main: colors.greenAccent[700],
                     },
                     neutral: {
                         dark: colors.grey[700],
